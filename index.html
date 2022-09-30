@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Calculator</title>
+    </head>
+    <body>
+        <input id="input" type="number" min="0" title="calculate">
+        <p><strong id="result"></strong></p>
+        <ul id="summary"></ul>
+        <script>
+            const input = document.querySelector('#input')
+            const result = document.querySelector('#result')
+            const summary = document.querySelector('#summary')
+
+            function addToList(text) {
+                const list = document.createElement('li')
+                const content = document.createTextNode(text)
+                list.appendChild(content)
+                summary.appendChild(list)
+            }
+
+            function addSummary(numbers, root) {
+                const n = numbers.join(' + ') + ' = '
+                const text = n + String(root) + ' (' + String(root).split('').join(' + ') + ')'
+                addToList(text)
+            }
+
+            function calcRoot(numbers) {
+                let root = numbers.reduce((acc, s) => {
+                    const n = Number.parseInt(s, 10)
+                    return acc += n
+                }, 0)
+
+                if (numbers.length > 1 && root < 9) {
+                    addToList(numbers.join(' + ') + ' = ' + root)
+                    
+                } else if (root > 9) {
+                    addSummary(numbers, root)
+                    const stringRoot = `${root}`
+                    const newnumbers = stringRoot.split('')
+                    root = calcRoot(newnumbers)
+                }
+                
+                return root
+            }
+
+            const handler = e => {
+                const value = input.value
+                const isNumber = !isNaN(parseInt(value, 10))
+
+                summary.innerHTML = ''
+
+                if (!value || !isNumber) {
+                    return result.textContent = ''
+                }
+
+                const numbers = input.value.split('')
+                const root = calcRoot(numbers)
+
+                result.textContent = ''
+                result.textContent = root
+            }
+
+            input.addEventListener('keyup', handler)
+            input.addEventListener('change', handler)
+        </script>
+    </body>
+</html>
