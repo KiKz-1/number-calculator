@@ -14,17 +14,17 @@
             const result = document.querySelector('#result')
             const summary = document.querySelector('#summary')
 
-            function addToList(text) {
+            function renderListItem(text) {
                 const list = document.createElement('li')
                 const content = document.createTextNode(text)
                 list.appendChild(content)
                 summary.appendChild(list)
             }
 
-            function addSummary(numbers, root) {
+            function renderList(numbers, root) {
                 const n = numbers.join(' + ') + ' = '
                 const text = n + String(root) + ' (' + String(root).split('').join(' + ') + ')'
-                addToList(text)
+                renderListItem(text)
             }
 
             function calcRoot(numbers) {
@@ -34,10 +34,12 @@
                 }, 0)
 
                 if (numbers.length > 1 && root < 9) {
-                    addToList(numbers.join(' + ') + ' = ' + root)
+                    renderListItem(numbers.join(' + ') + ' = ' + root)
                     
-                } else if (root > 9) {
-                    addSummary(numbers, root)
+                }
+                
+                if (root > 9) {
+                    renderList(numbers, root)
                     const stringRoot = `${root}`
                     const newnumbers = stringRoot.split('')
                     root = calcRoot(newnumbers)
